@@ -3,7 +3,7 @@ import type { Handle } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
 
 export const handle = (async function handle({ event, resolve }) {
-    event.locals.pb = new PocketBase("http://127.0.0.1:8090");
+    event.locals.pb = new PocketBase(import.meta.env.VITE_PB_URL);
 
     // load the store data from the request cookie string
     event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
@@ -23,7 +23,12 @@ export const handle = (async function handle({ event, resolve }) {
     const response = await resolve(event);
 
     // send back the default 'pb_auth' cookie to the client with the latest store state
-    response.headers.set('set-cookie', event.locals.pb.authStore.exportToCookie({ secure: false, sameSite: 'Lax' }));
+    response.headers.set('set-cookie', event.locals.pb.authStore.exportToCookie(
+        {
+            secure: import.meta.env.MODE === 'development' ? false : true,
+            sameSite: 'Lax',
+        }
+    ));
 
     return response;
 }) satisfies Handle;

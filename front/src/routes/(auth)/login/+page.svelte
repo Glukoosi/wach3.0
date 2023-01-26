@@ -4,7 +4,7 @@
 
     export let data: PageData;
 
-    const redirectUrl = "http://localhost:5173/login/redirect";
+    const redirectUrl = import.meta.env.VITE_REDIRECT_URL;
 
     const saveProvider = (provider: any) => {
         if (browser) {

@@ -2,7 +2,7 @@ import { redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const GET = (async ({ locals, url, cookies }) => {
-    const redirectUrl = "http://localhost:5173/login/redirect";
+    const redirectUrl = import.meta.env.VITE_REDIRECT_URL;
     const params = new URLSearchParams(url.search);
     const provider = JSON.parse(cookies.get('state') || '{}');
 
